@@ -116,7 +116,7 @@ export default function StudentProfilePage() {
             {student.status}
           </span>
           <Select value={student.status} onValueChange={(v) => v && updateStatus(v)}>
-            <SelectTrigger className="w-36 h-8 text-xs">
+            <SelectTrigger className="w-full sm:w-36 h-8 text-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
