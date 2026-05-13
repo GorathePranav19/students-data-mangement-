@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     const { full_name, email, phone, password } = await request.json();
 
     // Create auth user using admin client
-    const { createAdminClient } = await import("@/lib/supabase");
+    const { createAdminClient } = await import("@/lib/supabase-server");
     const adminClient = createAdminClient();
 
     const { data: authUser, error: authError } = await adminClient.auth.admin.createUser({

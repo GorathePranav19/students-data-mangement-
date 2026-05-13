@@ -83,7 +83,7 @@ export default function FeesPage() {
       </div>
 
       {/* Filter */}
-      <Select value={statusFilter} onValueChange={setStatusFilter}>
+      <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v ?? "all")}>
         <SelectTrigger className="w-52">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>

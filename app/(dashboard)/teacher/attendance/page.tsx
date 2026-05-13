@@ -118,7 +118,7 @@ export default function TeacherAttendancePage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <Label>Select Batch</Label>
-            <Select value={selectedBatch} onValueChange={setSelectedBatch}>
+            <Select value={selectedBatch} onValueChange={(v) => setSelectedBatch(v ?? "")}>
               <SelectTrigger className="mt-1">
                 <SelectValue placeholder="Choose batch" />
               </SelectTrigger>

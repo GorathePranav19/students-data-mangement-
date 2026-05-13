@@ -28,8 +28,9 @@ export default function BatchesPage() {
   const [editingBatch, setEditingBatch] = useState<Batch | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { register, handleSubmit, control, reset, formState: { errors } } =
-    useForm<BatchFormValues>({ resolver: zodResolver(batchSchema) });
+    useForm<any>({ resolver: zodResolver(batchSchema) });
 
   const fetchData = async () => {
     const [bRes, cRes, tRes] = await Promise.all([
@@ -154,7 +155,7 @@ export default function BatchesPage() {
               <div className="col-span-2">
                 <Label>Batch Name *</Label>
                 <Input {...register("batch_name")} placeholder="e.g. Morning Batch A" className="mt-1" />
-                {errors.batch_name && <p className="text-red-500 text-xs mt-1">{errors.batch_name.message}</p>}
+                {errors.batch_name && <p className="text-red-500 text-xs mt-1">{errors.batch_name.message as string}</p>}
               </div>
               <div className="col-span-2">
                 <Label>Course *</Label>
@@ -170,7 +171,7 @@ export default function BatchesPage() {
                     </SelectContent>
                   </Select>
                 )} />
-                {errors.course_id && <p className="text-red-500 text-xs mt-1">{errors.course_id.message}</p>}
+                {errors.course_id && <p className="text-red-500 text-xs mt-1">{errors.course_id.message as string}</p>}
               </div>
               <div className="col-span-2">
                 <Label>Teacher *</Label>
@@ -186,12 +187,12 @@ export default function BatchesPage() {
                     </SelectContent>
                   </Select>
                 )} />
-                {errors.teacher_id && <p className="text-red-500 text-xs mt-1">{errors.teacher_id.message}</p>}
+                {errors.teacher_id && <p className="text-red-500 text-xs mt-1">{errors.teacher_id.message as string}</p>}
               </div>
               <div>
                 <Label>Batch Timing *</Label>
                 <Input {...register("batch_time")} placeholder="e.g. 9:00 AM - 10:00 AM" className="mt-1" />
-                {errors.batch_time && <p className="text-red-500 text-xs mt-1">{errors.batch_time.message}</p>}
+                {errors.batch_time && <p className="text-red-500 text-xs mt-1">{errors.batch_time.message as string}</p>}
               </div>
               <div>
                 <Label>Days of Week</Label>

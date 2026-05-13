@@ -35,8 +35,9 @@ export default function CoursesPage() {
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { register, handleSubmit, reset, setValue, formState: { errors } } =
-    useForm<CourseFormValues>({ resolver: zodResolver(courseSchema) });
+    useForm<any>({ resolver: zodResolver(courseSchema) });
 
   const fetchCourses = async () => {
     const res = await fetch("/api/courses");
@@ -166,7 +167,7 @@ export default function CoursesPage() {
               <div className="col-span-2">
                 <Label>Course Name *</Label>
                 <Input {...register("course_name")} placeholder="e.g. Basic Computer" className="mt-1" />
-                {errors.course_name && <p className="text-red-500 text-xs mt-1">{errors.course_name.message}</p>}
+                {errors.course_name && <p className="text-red-500 text-xs mt-1">{errors.course_name.message as string}</p>}
               </div>
               <div>
                 <Label>Course Code</Label>
@@ -183,7 +184,7 @@ export default function CoursesPage() {
               <div>
                 <Label>Fee Amount (₹) *</Label>
                 <Input type="number" {...register("fee_amount")} className="mt-1" />
-                {errors.fee_amount && <p className="text-red-500 text-xs mt-1">{errors.fee_amount.message}</p>}
+                {errors.fee_amount && <p className="text-red-500 text-xs mt-1">{errors.fee_amount.message as string}</p>}
               </div>
               <div>
                 <Label>Skill Level *</Label>

@@ -110,7 +110,7 @@ export default function TeacherProgressPage() {
       {/* Batch selector */}
       <div className="max-w-xs">
         <Label>Select Batch</Label>
-        <Select value={selectedBatch} onValueChange={setSelectedBatch}>
+        <Select value={selectedBatch} onValueChange={(v) => setSelectedBatch(v ?? "")}>
           <SelectTrigger className="mt-1">
             <SelectValue placeholder="Choose a batch" />
           </SelectTrigger>
@@ -206,7 +206,7 @@ export default function TeacherProgressPage() {
             </div>
             <div>
               <Label>Performance Level</Label>
-              <Select value={form.performance_level} onValueChange={(v) => setForm({ ...form, performance_level: v })}>
+              <Select value={form.performance_level} onValueChange={(v) => setForm({ ...form, performance_level: v ?? "" })}>
                 <SelectTrigger className="mt-1"><SelectValue placeholder="Select level" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="excellent">Excellent</SelectItem>

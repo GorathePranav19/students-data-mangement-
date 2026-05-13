@@ -89,7 +89,7 @@ export default function StudentsPage() {
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           />
         </div>
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
+        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v ?? "all"); setPage(1); }}>
           <SelectTrigger className="w-full sm:w-44">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>

@@ -53,7 +53,7 @@ export default function AdminAttendancePage() {
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <Select value={batchFilter} onValueChange={setBatchFilter}>
+        <Select value={batchFilter} onValueChange={(v) => setBatchFilter(v ?? "all")}>
           <SelectTrigger className="w-full sm:w-56">
             <SelectValue placeholder="All Batches" />
           </SelectTrigger>

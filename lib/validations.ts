@@ -64,7 +64,7 @@ export const batchSchema = z.object({
   end_date: z.string().optional().or(z.literal('')),
   batch_time: z.string().min(1, 'Batch timing is required'),
   days_of_week: z.string().optional().or(z.literal('')),
-  max_students: z.coerce.number().min(1, 'Max students must be at least 1').max(200),
+  max_students: z.coerce.number().min(1, 'Max students must be at least 1').max(200).transform((v) => Number(v)),
   status: z.enum(['active', 'inactive', 'completed']).default('active'),
 });
 

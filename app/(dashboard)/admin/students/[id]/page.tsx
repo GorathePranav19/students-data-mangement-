@@ -22,7 +22,7 @@ import {
 import { toast } from "sonner";
 import type { Student, Enrollment, Course, Batch, Fee, ProgressLog } from "@/types";
 
-interface FullStudent extends Student {
+interface FullStudent extends Omit<Student, 'guardians'> {
   guardians: { id: string; guardian_name: string; relation?: string; phone: string; alternate_phone?: string; emergency_contact?: string }[];
   enrollments: (Enrollment & { course: Course; batch: Batch })[];
   fees: Fee[];
@@ -115,7 +115,7 @@ export default function StudentProfilePage() {
           <span className={`status-pill capitalize ${getStudentStatusColor(student.status)}`}>
             {student.status}
           </span>
-          <Select value={student.status} onValueChange={updateStatus}>
+          <Select value={student.status} onValueChange={(v) => v && updateStatus(v)}>
             <SelectTrigger className="w-36 h-8 text-xs">
               <SelectValue />
             </SelectTrigger>
@@ -308,7 +308,7 @@ export default function StudentProfilePage() {
           <div className="space-y-4 py-2">
             <div>
               <Label>Course *</Label>
-              <Select value={enrollForm.course_id} onValueChange={(v) => setEnrollForm({ ...enrollForm, course_id: v })}>
+              <Select value={enrollForm.course_id} onValueChange={(v) => setEnrollForm({ ...enrollForm, course_id: v ?? "" })}>
                 <SelectTrigger className="mt-1"><SelectValue placeholder="Select course" /></SelectTrigger>
                 <SelectContent>
                   {courses.filter((c) => c.status === "active").map((c) => (
@@ -319,7 +319,7 @@ export default function StudentProfilePage() {
             </div>
             <div>
               <Label>Batch (Optional)</Label>
-              <Select value={enrollForm.batch_id} onValueChange={(v) => setEnrollForm({ ...enrollForm, batch_id: v })}>
+              <Select value={enrollForm.batch_id} onValueChange={(v) => setEnrollForm({ ...enrollForm, batch_id: v ?? "" })}>
                 <SelectTrigger className="mt-1"><SelectValue placeholder="Select batch" /></SelectTrigger>
                 <SelectContent>
                   {batches.filter((b) => b.status === "active" && (!enrollForm.course_id || b.course_id === enrollForm.course_id)).map((b) => (
