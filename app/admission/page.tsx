@@ -36,6 +36,8 @@ export default function AdmissionPage() {
     control,
     formState: { errors },
     watch,
+    setValue,
+    getValues,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useForm<any>({
     resolver: zodResolver(admissionSchema),
@@ -43,15 +45,33 @@ export default function AdmissionPage() {
   });
 
   useEffect(() => {
+    const draft = localStorage.getItem("admission_draft");
+    if (draft) {
+      try {
+        const parsed = JSON.parse(draft);
+        Object.keys(parsed).forEach(key => setValue(key, parsed[key]));
+        toast.info("Draft loaded!");
+      } catch { }
+    }
+
     fetch("/api/courses")
       .then((r) => r.json())
       .then((d) => setCourses((d.data ?? []).filter((c: Course) => c.status === "active")));
-  }, []);
+  }, [setValue]);
+
+  const saveDraft = () => {
+    const data = getValues();
+    localStorage.setItem("admission_draft", JSON.stringify(data));
+    toast.success("Draft saved successfully!");
+  };
 
   const nextStep = async () => {
     const fields = STEPS[step].fields as (keyof AdmissionFormValues)[];
     const valid = await trigger(fields);
-    if (valid) setStep((s) => s + 1);
+    if (valid) {
+      setStep((s) => s + 1);
+      saveDraft(); // Auto-save on next
+    }
   };
 
   const onSubmit = async (data: AdmissionFormValues) => {
@@ -68,6 +88,7 @@ export default function AdmissionPage() {
         toast.error(json.error ?? "Submission failed. Please try again.");
         return;
       }
+      localStorage.removeItem("admission_draft");
       router.push("/admission/success");
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -146,7 +167,7 @@ export default function AdmissionPage() {
                   </div>
                   <div>
                     <Label htmlFor="age">Age *</Label>
-                    <Input id="age" type="number" {...register("age")} placeholder="Age (no limit!)" className="mt-1" />
+                    <Input id="age" type="number" min="0" max="150" {...register("age")} placeholder="Age (no limit!)" className="mt-1" />
                     {errors.age && <p className="text-red-500 text-xs mt-1">{errors.age.message as string}</p>}
                   </div>
                 </div>
@@ -183,12 +204,12 @@ export default function AdmissionPage() {
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="phone">Mobile Number *</Label>
-                  <Input id="phone" {...register("phone")} placeholder="10-digit mobile number" className="mt-1" />
+                  <Input id="phone" type="tel" maxLength={10} pattern="[0-9]{10}" {...register("phone")} placeholder="10-digit mobile number" className="mt-1" />
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message as string}</p>}
                 </div>
                 <div>
                   <Label htmlFor="alternate_phone">Alternate Mobile</Label>
-                  <Input id="alternate_phone" {...register("alternate_phone")} placeholder="Optional" className="mt-1" />
+                  <Input id="alternate_phone" type="tel" maxLength={10} pattern="[0-9]{10}" {...register("alternate_phone")} placeholder="Optional" className="mt-1" />
                 </div>
                 <div>
                   <Label htmlFor="email">Email Address</Label>
@@ -213,7 +234,7 @@ export default function AdmissionPage() {
                   </div>
                   <div>
                     <Label htmlFor="pin_code">PIN Code</Label>
-                    <Input id="pin_code" {...register("pin_code")} placeholder="6-digit PIN" className="mt-1" />
+                    <Input id="pin_code" type="text" maxLength={6} pattern="[0-9]{6}" {...register("pin_code")} placeholder="6-digit PIN" className="mt-1" />
                     {errors.pin_code && <p className="text-red-500 text-xs mt-1">{errors.pin_code.message as string}</p>}
                   </div>
                 </div>
@@ -246,16 +267,16 @@ export default function AdmissionPage() {
                 </div>
                 <div>
                   <Label htmlFor="guardian_phone">Guardian Mobile *</Label>
-                  <Input id="guardian_phone" {...register("guardian_phone")} placeholder="10-digit mobile" className="mt-1" />
+                  <Input id="guardian_phone" type="tel" maxLength={10} pattern="[0-9]{10}" {...register("guardian_phone")} placeholder="10-digit mobile" className="mt-1" />
                   {errors.guardian_phone && <p className="text-red-500 text-xs mt-1">{errors.guardian_phone.message as string}</p>}
                 </div>
                 <div>
                   <Label htmlFor="guardian_alternate_phone">Alternate Mobile</Label>
-                  <Input id="guardian_alternate_phone" {...register("guardian_alternate_phone")} placeholder="Optional" className="mt-1" />
+                  <Input id="guardian_alternate_phone" type="tel" maxLength={10} pattern="[0-9]{10}" {...register("guardian_alternate_phone")} placeholder="Optional" className="mt-1" />
                 </div>
                 <div>
                   <Label htmlFor="emergency_contact">Emergency Contact</Label>
-                  <Input id="emergency_contact" {...register("emergency_contact")} placeholder="Emergency contact number" className="mt-1" />
+                  <Input id="emergency_contact" type="tel" maxLength={10} pattern="[0-9]{10}" {...register("emergency_contact")} placeholder="Emergency contact number" className="mt-1" />
                 </div>
               </div>
             )}
@@ -319,12 +340,15 @@ export default function AdmissionPage() {
             )}
 
             {/* Navigation */}
-            <div className="flex gap-3 mt-8">
+            <div className="flex flex-col sm:flex-row gap-3 mt-8">
               {step > 0 && (
                 <Button type="button" variant="outline" onClick={() => setStep((s) => s - 1)} className="flex-1">
                   <ChevronLeft className="w-4 h-4 mr-1" /> Back
                 </Button>
               )}
+              <Button type="button" variant="secondary" onClick={saveDraft} className="flex-1">
+                Save Draft
+              </Button>
               {step < STEPS.length - 1 ? (
                 <Button type="button" onClick={nextStep} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white">
                   Next <ChevronRight className="w-4 h-4 ml-1" />

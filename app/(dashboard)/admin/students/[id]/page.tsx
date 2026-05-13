@@ -232,7 +232,7 @@ export default function StudentProfilePage() {
 
         {/* Fees */}
         <TabsContent value="fees">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden overflow-x-auto">
             {student.fees?.length > 0 ? (
               <table className="w-full text-sm">
                 <thead className="border-b border-gray-100 bg-gray-50">

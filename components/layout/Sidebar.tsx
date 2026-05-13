@@ -46,14 +46,16 @@ const teacherNavItems: NavItem[] = [
 interface SidebarProps {
   role: "admin" | "teacher";
   userName: string;
+  isMobile?: boolean;
+  onNavigate?: () => void;
 }
 
-export default function Sidebar({ role, userName }: SidebarProps) {
+export default function Sidebar({ role, userName, isMobile, onNavigate }: SidebarProps) {
   const pathname = usePathname();
   const navItems = role === "admin" ? adminNavItems : teacherNavItems;
 
   return (
-    <aside className="w-64 flex-shrink-0 gradient-sidebar min-h-screen flex flex-col">
+    <aside className={cn("flex-shrink-0 gradient-sidebar flex flex-col", isMobile ? "w-full h-full" : "w-64 min-h-screen")}>
       {/* Logo / Brand */}
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center gap-3">
@@ -87,6 +89,7 @@ export default function Sidebar({ role, userName }: SidebarProps) {
                 "sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
                 isActive && "sidebar-link-active"
               )}
+              onClick={onNavigate}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
               {item.label}

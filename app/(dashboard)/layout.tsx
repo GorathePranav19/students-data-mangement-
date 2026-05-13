@@ -16,8 +16,10 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <Sidebar role={profile.role} userName={profile.full_name} />
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block">
+        <Sidebar role={profile.role} userName={profile.full_name} />
+      </div>
 
       {/* Main content area */}
       <div className="flex-1 flex flex-col overflow-hidden">
